@@ -1,4 +1,5 @@
 from lib2to3.pgen2 import driver
+import logging
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -32,11 +33,29 @@ def screenMenu():
         titleEl.screenshot(os.path.join(DOWNLOAD_PATH, 'TOC.png'))
     finally:
         print('finally quit')
-        browser.quit()
 
 
 # screenMenu()
 
+def getTocTree():
+    selector_level_1 = '#python-cookbook-3rd-edition-documentation .toctree-wrapper .toctree-l1'
+    selector_level_2 = '.toctree-l2'
+    browser.get(main_page)
+    browser.implicitly_wait(3)
+    el_list = browser.find_elements(By.CSS_SELECTOR,selector_level_1)
+    node_list = []
+    for el in el_list:
+        print(el.value_of_css_property())
+        
+    pass
+
+try: 
+    getTocTree()
+except Exception as e:
+    logging.exception(e)
+finally: 
+    pass
+browser.quit()
 
 
 
