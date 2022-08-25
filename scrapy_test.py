@@ -1,4 +1,3 @@
-from lib2to3.pgen2 import driver
 import logging
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -43,10 +42,22 @@ def getTocTree():
     browser.get(main_page)
     browser.implicitly_wait(3)
     el_list = browser.find_elements(By.CSS_SELECTOR,selector_level_1)
+    id = 1
     node_list = []
-    for el in el_list:
-        print(el.value_of_css_property())
+    for index,el in enumerate(el_list):
+        link_el = el.find_element(By.CSS_SELECTOR,'.toctree-l1>a')
+        if(link_el is not None):
+            url = link_el.get_attribute('href')
+            title =  link_el.text
+            node = dict(id=id+1,url=url,title=title,pid=0)
+            id = id+1
+            list.append(node)
         
+    pass
+def saveFile(folder,file_name,content):
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+    
     pass
 
 try: 
