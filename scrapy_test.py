@@ -1,3 +1,4 @@
+import json
 import logging
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -51,13 +52,17 @@ def getTocTree():
             title =  link_el.text
             node = dict(id=id+1,url=url,title=title,pid=0)
             id = id+1
-            list.append(node)
-        
+            node_list.append(node)
+    json_str = json.dumps(node_list,indent=4,ensure_ascii=False)
+    saveFile('./json/','all_menu.json',json_str)
     pass
+
 def saveFile(folder,file_name,content):
     if not os.path.exists(folder):
         os.makedirs(folder)
-    
+    with open(os.path.join(folder,file_name),'w') as f:
+        f.write(content)
+        pass
     pass
 
 try: 
