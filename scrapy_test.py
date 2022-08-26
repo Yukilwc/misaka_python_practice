@@ -43,24 +43,29 @@ def getTocTree():
     browser.get(main_page)
     browser.implicitly_wait(3)
     el_list = browser.find_elements(By.CSS_SELECTOR,selector_level_1)
-    id = 1
+    id = 0
     node_list = []
     for index,el in enumerate(el_list):
-        link_el = el.find_element(By.CSS_SELECTOR,'.toctree-l1>a')
-        if(link_el is not None):
-            url = link_el.get_attribute('href')
-            title =  link_el.text
-            node = dict(id=id+1,url=url,title=title,pid=0)
-            id = id+1
-            node_list.append(node)
+        node = generate_node_from_el(el,'.toctree-l1>a',id+1,0)
+        node_list.append(node)
+        # 构造子级
+        second_link_list = link_el.find_elements(By.CSS_SELECTOR,selector_level_2)
     json_str = json.dumps(node_list,indent=4,ensure_ascii=False)
     saveFile('./json/','all_menu.json',json_str)
     pass
-
+def generate_node_from_el(el,selector,id,pid):
+    link_el = el.find_element(By.CSS_SELECTOR,selector)
+    if(link_el is not None):
+        url = link_el.get_attribute('href')
+        title =  link_el.text
+        node = dict(id=id,url=url,title=title,pid=pid)
+        return node
+    else:
+        return None
 def saveFile(folder,file_name,content):
     if not os.path.exists(folder):
         os.makedirs(folder)
-    with open(os.path.join(folder,file_name),'w') as f:
+    with open(os.path.join(folder,file_name),'w',encoding="utf8") as f:
         f.write(content)
         pass
     pass
