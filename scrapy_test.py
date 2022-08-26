@@ -46,22 +46,27 @@ def getTocTree():
     id = 0
     node_list = []
     for index,el in enumerate(el_list):
-        node = generate_node_from_el(el,'.toctree-l1>a',id+1,0)
-        node_list.append(node)
+        first_node,link_el = generate_node_from_el(el,'.toctree-l1>a',id+1,0)
+        node_list.append(first_node)
         # 构造子级
         second_link_list = link_el.find_elements(By.CSS_SELECTOR,selector_level_2)
+        for index,second_el in enumerate(second_link_list):
+            second_node,second_link_el = generate_node_from_el(second_el,'.toctree-l2>a',id+1,first_node['id'])
+            node_list.append(second_node)
+            pass
     json_str = json.dumps(node_list,indent=4,ensure_ascii=False)
     saveFile('./json/','all_menu.json',json_str)
-    pass
+
+
 def generate_node_from_el(el,selector,id,pid):
     link_el = el.find_element(By.CSS_SELECTOR,selector)
     if(link_el is not None):
         url = link_el.get_attribute('href')
         title =  link_el.text
         node = dict(id=id,url=url,title=title,pid=pid)
-        return node
+        return node,link_el
     else:
-        return None
+        return None,None
 def saveFile(folder,file_name,content):
     if not os.path.exists(folder):
         os.makedirs(folder)

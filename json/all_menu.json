@@ -1,0 +1,122 @@
+[
+    {
+        "id": 1,
+        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/copyright.html",
+        "title": "Copyright",
+        "pid": 0
+    },
+    {
+        "id": 1,
+        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/preface.html",
+        "title": "前言",
+        "pid": 0
+    },
+    {
+        "id": 1,
+        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/chapters/p01_data_structures_algorithms.html",
+        "title": "第一章：数据结构和算法",
+        "pid": 0
+    },
+    {
+        "id": 1,
+        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/chapters/p02_strings_and_text.html",
+        "title": "第二章：字符串和文本",
+        "pid": 0
+    },
+    {
+        "id": 1,
+        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/chapters/p03_numbers_dates_times.html",
+        "title": "第三章：数字日期和时间",
+        "pid": 0
+    },
+    {
+        "id": 1,
+        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/chapters/p04_iterators_and_generators.html",
+        "title": "第四章：迭代器与生成器",
+        "pid": 0
+    },
+    {
+        "id": 1,
+        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/chapters/p05_files_and_io.html",
+        "title": "第五章：文件与IO",
+        "pid": 0
+    },
+    {
+        "id": 1,
+        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/chapters/p06_data_encoding_and_process.html",
+        "title": "第六章：数据编码和处理",
+        "pid": 0
+    },
+    {
+        "id": 1,
+        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/chapters/p07_functions.html",
+        "title": "第七章：函数",
+        "pid": 0
+    },
+    {
+        "id": 1,
+        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/chapters/p08_classes_and_objects.html",
+        "title": "第八章：类与对象",
+        "pid": 0
+    },
+    {
+        "id": 1,
+        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/chapters/p09_meta_programming.html",
+        "title": "第九章：元编程",
+        "pid": 0
+    },
+    {
+        "id": 1,
+        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/chapters/p10_modules_and_packages.html",
+        "title": "第十章：模块与包",
+        "pid": 0
+    },
+    {
+        "id": 1,
+        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/chapters/p11_network_and_web_program.html",
+        "title": "第十一章：网络与Web编程",
+        "pid": 0
+    },
+    {
+        "id": 1,
+        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/chapters/p12_concurrency.html",
+        "title": "第十二章：并发编程",
+        "pid": 0
+    },
+    {
+        "id": 1,
+        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/chapters/p13_utility_script_and_system_manage.html",
+        "title": "第十三章：脚本编程与系统管理",
+        "pid": 0
+    },
+    {
+        "id": 1,
+        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/chapters/p14_test_debug_and_exceptions.html",
+        "title": "第十四章：测试、调试和异常",
+        "pid": 0
+    },
+    {
+        "id": 1,
+        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/chapters/p15_c_extensions.html",
+        "title": "第十五章：C语言扩展",
+        "pid": 0
+    },
+    {
+        "id": 1,
+        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/chapters/p16_appendix.html",
+        "title": "附录A",
+        "pid": 0
+    },
+    {
+        "id": 1,
+        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/aboutme.html",
+        "title": "关于译者",
+        "pid": 0
+    },
+    {
+        "id": 1,
+        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/roadmap.html",
+        "title": "Roadmap",
+        "pid": 0
+    }
+]
