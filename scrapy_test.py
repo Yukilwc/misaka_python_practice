@@ -53,7 +53,6 @@ def getTocTree():
         for index,second_el in enumerate(second_link_list):
             second_node,second_link_el = generate_node_from_el(second_el,'.toctree-l2>a',id+1,first_node['id'])
             node_list.append(second_node)
-            pass
     json_str = json.dumps(node_list,indent=4,ensure_ascii=False)
     saveFile('./json/','all_menu.json',json_str)
 
