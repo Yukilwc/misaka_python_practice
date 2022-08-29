@@ -8,7 +8,9 @@ def rename_all_file_ext(dir_path,old_ext,new_ext):
         ext_name = os.path.splitext(filename)[1]
         if(ext_name==old_ext):
             new_name = os.path.splitext(filename)[0]+new_ext
-            os.rename(os.path.join(dir_path,filename),os.path.join(dir_path,new_name))
+            new_path_name = os.path.join(dir_path,new_name)
+            old_path_name = os.path.join(dir_path,filename)
+            os.rename(old_path_name,new_path_name)
     pass
 
 old_ext = input('输入要替换的旧ext:')
