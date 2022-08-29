@@ -1,6 +1,6 @@
 import json
 import logging
-from select import select
+import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -149,14 +149,36 @@ def screenPage(page,selector):
     titleEl.screenshot(os.path.join(DOWNLOAD_PATH, file_name))
  
 
+# try: 
+#     page = {
+#         "id": 13,
+#         "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/c01/p01_unpack_sequence_into_separate_variables.html",
+#         "title": "1.1 将序列分解为单独的变量",
+#         "pid": 12
+#     }
+#     screenPage(page,'.wy-nav-content')
+# except Exception as e:
+#     logging.exception(e)
+# finally: 
+#     pass
+
+def loop_tree_save_image():
+    jsonStr = ''
+    with open("./json/all_menu.json",'r',encoding="utf8") as f:
+        jsonStr = f.read()
+    all_menu = list(json.loads(jsonStr))
+    length = len(all_menu) 
+
+    for  index in range(0,length):
+        print(index)
+        page = all_menu[index]
+        if page is None:
+            return
+        screenPage(page,'.wy-nav-content')
+        time.sleep(1)
+
 try: 
-    page = {
-        "id": 13,
-        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/c01/p01_unpack_sequence_into_separate_variables.html",
-        "title": "1.1 将序列分解为单独的变量",
-        "pid": 12
-    }
-    screenPage(page,'.wy-nav-content')
+    loop_tree_save_image()
 except Exception as e:
     logging.exception(e)
 finally: 
