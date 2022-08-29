@@ -35,6 +35,12 @@ def add_style(driver,selector,**kw):
         res = driver.execute_script(js_string)
         print(res)
 
+def remove_el(driver,selector):
+    with open('./js_string/remove_el.js','r') as f:
+        js_string = f.read()
+        js_string = js_string.replace('replace_str_selector','"%s"' % selector)
+        res = driver.execute_script(js_string)
+        print(res)
 
 def screenMenu():
     try:
@@ -113,6 +119,7 @@ def saveFile(folder,file_name,content):
 # finally: 
 #     pass
 
+ 
 def screenPage(page,selector):
     browser.get(page['url'])
     # 创建等待对象
@@ -125,6 +132,8 @@ def screenPage(page,selector):
     # 隐式等待
     # browser.implicitly_wait(3)
     titleEl = browser.find_elements(By.CSS_SELECTOR,selector)[0]
+    # 移除页脚
+    remove_el(browser,'.wy-nav-content footer')
     add_style(browser,selector,style_name="paddingTop",style_value='30px')
     add_style(browser,selector,style_name="paddingBottom",style_value='30px')
     loc = titleEl.location
