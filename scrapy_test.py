@@ -48,7 +48,7 @@ def screenMenu():
         # 隐式等待
         # browser.implicitly_wait(3)
         titleEl = browser.find_elements(By.CSS_SELECTOR,"#python-cookbook-3rd-edition-documentation")[0]
-        add_style(browser,'#python-cookbook-3rd-edition-documentation',style_name="paddingTop",style_value='100px')
+        add_style(browser,'#python-cookbook-3rd-edition-documentation',style_name="padding",style_value='30px 0px ')
         loc = titleEl.location
         size = titleEl.size
         window_with = 1920
