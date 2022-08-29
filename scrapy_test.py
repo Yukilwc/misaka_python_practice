@@ -144,7 +144,8 @@ def screenPage(page,selector):
     DOWNLOAD_PATH = './images/'
     if not os.path.exists(DOWNLOAD_PATH):
         os.makedirs(DOWNLOAD_PATH)
-    file_name = '%s_%s_%s.png'%(page['pid'],page['id'],page['title'])
+    # file_name = '%s_%s_%s.png'%(page['pid'],page['id'],page['title'])
+    file_name = '%s_%s.png'%(page['pid'],page['id'])
     titleEl.screenshot(os.path.join(DOWNLOAD_PATH, file_name))
  
 
