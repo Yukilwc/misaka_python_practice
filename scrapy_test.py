@@ -4,6 +4,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 import os
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
 chrome_options = Options()
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--disable-gpu")
@@ -22,12 +24,31 @@ browser.execute_cdp_cmd(
 )
 # browser.maximize_window()
 # browser.set_window_size()
+# 通过js脚本，给页面添加padding
+def add_style(driver,selector,**kw):
+    with open('./js_string/add_style.js','r') as f:
+        js_string = f.read()
+        js_string = js_string.replace('replace_str_selector','"%s"' % selector)
+        js_string = js_string.replace('replace_str_style_name','"%s"' % kw['style_name'])
+        js_string = js_string.replace('replace_str_style_value','"%s"' % kw['style_value'])
+        res = driver.execute_script(js_string)
+        print(res)
+
+
 def screenMenu():
     try:
         browser.get(main_page)
-        browser.implicitly_wait(3)
+        # 创建等待对象
+        wait_obj = WebDriverWait(browser,10)
+        wait_obj.until(
+            expected_conditions.presence_of_element_located(
+                (By.CSS_SELECTOR,'#python-cookbook-3rd-edition-documentation')
+            )
+        )
+        # 隐式等待
+        # browser.implicitly_wait(3)
         titleEl = browser.find_elements(By.CSS_SELECTOR,"#python-cookbook-3rd-edition-documentation")[0]
-        # titleEl = browser.find_elements(By.CSS_SELECTOR,"body")[0]
+        add_style(browser,'#python-cookbook-3rd-edition-documentation',style_name="paddingTop",style_value='100px')
         loc = titleEl.location
         size = titleEl.size
         window_with = 1920
@@ -43,8 +64,7 @@ def screenMenu():
     finally:
         print('finally quit')
 
-
-# screenMenu()
+screenMenu()
 
 def getTocTree():
     selector_level_1 = '#python-cookbook-3rd-edition-documentation .toctree-wrapper .toctree-l1'
@@ -91,6 +111,8 @@ def saveFile(folder,file_name,content):
 #     logging.exception(e)
 # finally: 
 #     pass
+
+
 browser.quit()
 
 
