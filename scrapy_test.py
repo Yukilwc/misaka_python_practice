@@ -1,5 +1,6 @@
 import json
 import logging
+from select import select
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -64,7 +65,7 @@ def screenMenu():
     finally:
         print('finally quit')
 
-screenMenu()
+# screenMenu()
 
 def getTocTree():
     selector_level_1 = '#python-cookbook-3rd-edition-documentation .toctree-wrapper .toctree-l1'
@@ -111,6 +112,45 @@ def saveFile(folder,file_name,content):
 #     logging.exception(e)
 # finally: 
 #     pass
+
+def screenPage(page,selector):
+    browser.get(page['url'])
+    # 创建等待对象
+    wait_obj = WebDriverWait(browser,10)
+    wait_obj.until(
+        expected_conditions.presence_of_element_located(
+            (By.CSS_SELECTOR,selector)
+        )
+    )
+    # 隐式等待
+    # browser.implicitly_wait(3)
+    titleEl = browser.find_elements(By.CSS_SELECTOR,selector)[0]
+    add_style(browser,selector,style_name="paddingTop",style_value='30px')
+    add_style(browser,selector,style_name="paddingBottom",style_value='30px')
+    loc = titleEl.location
+    size = titleEl.size
+    window_with = 1920
+    window_height= loc['y']+size['height']
+    browser.set_window_size(window_with,window_height)
+    DOWNLOAD_PATH = './images/'
+    if not os.path.exists(DOWNLOAD_PATH):
+        os.makedirs(DOWNLOAD_PATH)
+    file_name = '%s_%s_%s.png'%(page['pid'],page['id'],page['title'])
+    titleEl.screenshot(os.path.join(DOWNLOAD_PATH, file_name))
+ 
+
+try: 
+    page = {
+        "id": 13,
+        "url": "https://python3-cookbook.readthedocs.io/zh_CN/latest/c01/p01_unpack_sequence_into_separate_variables.html",
+        "title": "1.1 将序列分解为单独的变量",
+        "pid": 12
+    }
+    screenPage(page,'.wy-nav-content')
+except Exception as e:
+    logging.exception(e)
+finally: 
+    pass
 
 
 browser.quit()
