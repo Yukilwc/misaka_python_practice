@@ -8,9 +8,18 @@ chrome_options = Options()
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--disable-gpu")
 chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument('--ignore-certificate-errors') #忽略一些莫名的问题
+chrome_options.add_argument('--disable-blink-features=AutomationControlled')  # 谷歌88版以上防止被检测
+# 添加试验性参数
+chrome_options.add_experimental_option('excludeSwitches', ['enable-automation'])
+chrome_options.add_experimental_option('useAutomationExtension', False)
 main_page = 'https://python3-cookbook.readthedocs.io/zh_CN/latest/index.html'
 chrome_path= 'C:\Program Files\Google\Chrome\Application\chromedriver.exe'
 browser = webdriver.Chrome(executable_path=chrome_path,chrome_options=chrome_options)
+browser.execute_cdp_cmd(
+    'Page.addScriptToEvaluateOnNewDocument',
+    {'source': 'Object.defineProperty(navigator, "webdriver", {get: () => undefined})'}
+)
 # browser.maximize_window()
 # browser.set_window_size()
 def screenMenu():
@@ -76,12 +85,12 @@ def saveFile(folder,file_name,content):
         pass
     pass
 
-try: 
-    getTocTree()
-except Exception as e:
-    logging.exception(e)
-finally: 
-    pass
+# try: 
+#     getTocTree()
+# except Exception as e:
+#     logging.exception(e)
+# finally: 
+#     pass
 browser.quit()
 
 
