@@ -46,12 +46,14 @@ def getTocTree():
     id = 0
     node_list = []
     for index,el in enumerate(el_list):
-        first_node,link_el = generate_node_from_el(el,'.toctree-l1>a',id+1,0)
+        id = id + 1
+        first_node,link_el = generate_node_from_el(el,'.toctree-l1>a',id,0)
         node_list.append(first_node)
         # 构造子级
-        second_link_list = link_el.find_elements(By.CSS_SELECTOR,selector_level_2)
+        second_link_list = el.find_elements(By.CSS_SELECTOR,selector_level_2)
         for index,second_el in enumerate(second_link_list):
-            second_node,second_link_el = generate_node_from_el(second_el,'.toctree-l2>a',id+1,first_node['id'])
+            id = id + 1
+            second_node,second_link_el = generate_node_from_el(second_el,'.toctree-l2>a',id,first_node['id'])
             node_list.append(second_node)
     json_str = json.dumps(node_list,indent=4,ensure_ascii=False)
     saveFile('./json/','all_menu.json',json_str)
