@@ -1,4 +1,5 @@
 import json
+from PIL import Image
 import logging
 import time
 from selenium import webdriver
@@ -44,18 +45,22 @@ def remove_el(driver,selector):
 
 def screenMenu():
     try:
+        selector = '.wy-nav-content'
         browser.get(main_page)
         # 创建等待对象
         wait_obj = WebDriverWait(browser,10)
         wait_obj.until(
             expected_conditions.presence_of_element_located(
-                (By.CSS_SELECTOR,'#python-cookbook-3rd-edition-documentation')
+                (By.CSS_SELECTOR,selector)
             )
         )
         # 隐式等待
         # browser.implicitly_wait(3)
-        titleEl = browser.find_elements(By.CSS_SELECTOR,"#python-cookbook-3rd-edition-documentation")[0]
-        add_style(browser,'#python-cookbook-3rd-edition-documentation',style_name="padding",style_value='30px 0px ')
+        titleEl = browser.find_elements(By.CSS_SELECTOR,selector)[0]
+        remove_el(browser,'.wy-nav-content footer')
+        add_style(browser,selector,style_name="paddingTop",style_value='30px')
+        add_style(browser,selector,style_name="paddingBottom",style_value='30px')
+ 
         loc = titleEl.location
         size = titleEl.size
         window_with = 1920
@@ -177,8 +182,36 @@ def loop_tree_save_image():
         screenPage(page,'.wy-nav-content')
         time.sleep(1)
 
+# try: 
+#     loop_tree_save_image()
+# except Exception as e:
+#     logging.exception(e)
+# finally: 
+#     pass
+
+def get_image_list():
+    list_str = ''
+    with open('./json/all_menu.json','r',encoding='utf8') as f:
+        list_str = f.read()
+    all_menu = list(json.loads(list_str))
+    TOC_image_path = './images/TOC.png'
+    res_list = []
+    res_list.append(TOC_image_path)
+    res_list = res_list + list(map(lambda item:'./images/%s_%s.png'%(item['pid'],item['id']),all_menu))
+    return res_list
+
+def image_list_2_pdf_by_pillow(list=[]):
+    pdf_dir = './generate_pdf/'
+    if not os.path.exists(pdf_dir):
+        os.makedirs(pdf_dir)
+    # 构造首个image和剩余image list 
+    img_1= Image.open(list[0]).convert('RGB')
+    img_others_list = [Image.open(path ).convert('RGB') for path in list[1:]]
+    img_1.save(os.path.join(pdf_dir,"python_cookbook.pdf"),save_all=True,append_images=img_others_list)
+
 try: 
-    loop_tree_save_image()
+    all_image_list = get_image_list()
+    image_list_2_pdf_by_pillow(all_image_list)
 except Exception as e:
     logging.exception(e)
 finally: 
