@@ -4,4 +4,4 @@ class BaseDocToPdf(object):
         self.menu_url = kv['menu_url']
 
 def hello():
-    pass
+    print('hello')

@@ -1,4 +1,5 @@
 # compiled output
+__pycache__
 /dist
 /node_modules
 /images
