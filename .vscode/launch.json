@@ -8,10 +8,10 @@
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
+            "program": "${workspaceFolder}/html_doc_2_pdf/src/main.py",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "stopOnEntry": true
+            "stopOnEntry": false
         }
     ]
 }
