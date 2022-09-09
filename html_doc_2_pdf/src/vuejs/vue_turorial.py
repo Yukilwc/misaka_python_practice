@@ -27,7 +27,7 @@ class TreeNode(object):
 class VueTurorialDoc2Pdf(object):
     def __init__(self) -> None:
         print('init VueTurorialDoc2Pdf')
-        self.menu_tree_folder =os.path.join( os.path.dirname(__file__),'json','menu')
+        self.menu_tree_folder =os.path.join( os.path.dirname(__file__),'dist_json','menu')
         self.menu_tree_file = 'data.json'
         self.menu_url = 'https://cn.vuejs.org/guide/introduction.html'
         self.chrome_utils = ChromeUtils()
@@ -35,6 +35,7 @@ class VueTurorialDoc2Pdf(object):
         try:
             self.app_init(domain=self.menu_url)
             # self.menu_tree_2_json()
+            self.screen_page(self.menu_url)
         except Exception as e:
             logging.exception(e)
         finally:
@@ -73,4 +74,31 @@ class VueTurorialDoc2Pdf(object):
                 node_list.append(link_node)
         content = [node.__dict__ for node in node_list]
         save_json_file(content,folder_path=self.menu_tree_folder,file_name=self.menu_tree_file)
+        pass
+    
+    # 截取页面
+    def screen_page(self,url):
+        self.browser.get(url)
+        self.on_before_screen()
+        ChromeUtils.screenshot_body(self.browser)
+        pass
+
+    # 截屏前钩子
+    def on_before_screen(self):
+        window_with = 1920
+        window_height= 9999
+        self.browser.set_window_size(window_with,window_height)
+        # 去除多余元素
+        ChromeUtils.remove_el(self.browser,'.banner')
+        ChromeUtils.remove_el(self.browser,'.nav-bar')
+        ChromeUtils.remove_el(self.browser,'.aside-container >div:not(.VPContentDocOutline)')
+        ChromeUtils.remove_el(self.browser,'.vuejobs-wrapper')
+        # 修正样式
+        ChromeUtils.add_style(self.browser,'.VPSidebar',style_name="top",style_value='0px')
+        ChromeUtils.add_style(self.browser,'.VPApp',style_name="paddingTop",style_value='0px')
+        ChromeUtils.add_style(self.browser,'.VPContent',style_name="paddingTop",style_value='0px')
+        # 设置尺寸
+        size = ChromeUtils.get_window_size(self.browser,'#app')
+        self.browser.set_window_size(size['width'],size['height'])
+
         pass
