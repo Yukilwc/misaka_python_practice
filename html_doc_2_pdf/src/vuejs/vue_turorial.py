@@ -1,8 +1,10 @@
 import logging
+from operator import contains
 import os
+import time
 from tools.use_selenium import ChromeUtils
 from selenium.webdriver.common.by import By
-from tools.file_tools import save_json_file
+from tools.file_tools import load_json_file, save_json_file
 
 
 class TreeNode(object):
@@ -24,8 +26,10 @@ class TreeNode(object):
         self.title = el.text
         self.url = el.get_attribute('href') 
         return self
-    def get_name(self):
-        return '%s_%s.png' % (self.pid,self.id)
+
+    @staticmethod
+    def get_name(**kw):
+        return '%s_%s.png' % (kw['pid'],kw['id'])
 class VueTurorialDoc2Pdf(object):
     def __init__(self) -> None:
         print('init VueTurorialDoc2Pdf')
@@ -39,7 +43,7 @@ class VueTurorialDoc2Pdf(object):
         try:
             self.app_init(domain=self.menu_url)
             # self.menu_tree_2_json()
-            self.screen_page(self.menu_url,'test.png')
+            self.screen_all_page()
         except Exception as e:
             logging.exception(e)
         finally:
@@ -112,5 +116,11 @@ class VueTurorialDoc2Pdf(object):
         pass
 
     # 截取保存全部图片
-    def screen_all_page():
+    def screen_all_page(self):
+        list = load_json_file(os.path.join(self.menu_tree_folder,self.menu_tree_file))
+        list = list[:10]
+        for node in list:
+            if node['url'] != '':
+                self.screen_page(node['url'],TreeNode.get_name(**node))
+                # time.sleep(1)
         pass
