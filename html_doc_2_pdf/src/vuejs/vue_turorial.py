@@ -1,7 +1,9 @@
 import logging
+import multiprocessing
 from operator import contains
 import os
 import time
+from tools.list_tools import list_split
 from tools.use_selenium import ChromeUtils
 from selenium.webdriver.common.by import By
 from tools.file_tools import load_json_file, save_json_file
@@ -114,13 +116,26 @@ class VueTurorialDoc2Pdf(object):
         self.browser.set_window_size(size['width'],size['height'])
 
         pass
-
+    
+    def test_multi(self):
+        print(' test_multi',self.screen_images_folder)
     # 截取保存全部图片
     def screen_all_page(self):
         list = load_json_file(os.path.join(self.menu_tree_folder,self.menu_tree_file))
-        list = list[:10]
-        for node in list:
-            if node['url'] != '':
-                self.screen_page(node['url'],TreeNode.get_name(**node))
-                # time.sleep(1)
+        length = len(list)
+        thread_num = multiprocessing.cpu_count()
+        group_len = length//thread_num
+        if length%thread_num>0:
+            group_len+=1
+        split_list = list_split(list,group_len)
+        p = multiprocessing.Process(target=self.test_multi, args=('test',))
+        print('Child process will start.')
+        p.start()
+        p.join()
+        print('Child process end.')
+        # list分为5份
+        # for node in list:
+        #     if node['url'] != '':
+        #         self.screen_page(node['url'],TreeNode.get_name(**node))
+        #         # time.sleep(1)
         pass
