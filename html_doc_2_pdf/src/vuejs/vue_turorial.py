@@ -24,18 +24,22 @@ class TreeNode(object):
         self.title = el.text
         self.url = el.get_attribute('href') 
         return self
+    def get_name(self):
+        return '%s_%s.png' % (self.pid,self.id)
 class VueTurorialDoc2Pdf(object):
     def __init__(self) -> None:
         print('init VueTurorialDoc2Pdf')
-        self.menu_tree_folder =os.path.join( os.path.dirname(__file__),'dist_json','menu')
+        self.menu_tree_folder =os.path.join( os.path.dirname(__file__),'dist','json')
         self.menu_tree_file = 'data.json'
+        self.screen_images_folder = os.path.join( os.path.dirname(__file__),'dist','images')
+        self.screen_selector = '#app'
         self.menu_url = 'https://cn.vuejs.org/guide/introduction.html'
         self.chrome_utils = ChromeUtils()
         self.browser = self.chrome_utils.get_browser()
         try:
             self.app_init(domain=self.menu_url)
             # self.menu_tree_2_json()
-            self.screen_page(self.menu_url)
+            self.screen_page(self.menu_url,'test.png')
         except Exception as e:
             logging.exception(e)
         finally:
@@ -77,16 +81,20 @@ class VueTurorialDoc2Pdf(object):
         pass
     
     # 截取页面
-    def screen_page(self,url):
+    def screen_page(self,url,name):
         self.browser.get(url)
         self.on_before_screen()
-        ChromeUtils.screenshot_body(self.browser)
+        # ChromeUtils.screenshot_body(self.browser)
+        el = self.browser.find_element(By.CSS_SELECTOR,self.screen_selector)
+        if not os.path.exists(self.screen_images_folder):
+            os.makedirs(self.screen_images_folder)
+        el.screenshot(os.path.join(self.screen_images_folder,name))
         pass
 
     # 截屏前钩子
     def on_before_screen(self):
         window_with = 1920
-        window_height= 9999
+        window_height= 1080
         self.browser.set_window_size(window_with,window_height)
         # 去除多余元素
         ChromeUtils.remove_el(self.browser,'.banner')
@@ -98,7 +106,11 @@ class VueTurorialDoc2Pdf(object):
         ChromeUtils.add_style(self.browser,'.VPApp',style_name="paddingTop",style_value='0px')
         ChromeUtils.add_style(self.browser,'.VPContent',style_name="paddingTop",style_value='0px')
         # 设置尺寸
-        size = ChromeUtils.get_window_size(self.browser,'#app')
+        size = ChromeUtils.get_window_size(self.browser,self.screen_selector)
         self.browser.set_window_size(size['width'],size['height'])
 
+        pass
+
+    # 截取保存全部图片
+    def screen_all_page():
         pass

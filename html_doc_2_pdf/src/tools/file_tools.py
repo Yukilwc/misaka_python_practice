@@ -13,3 +13,6 @@ def load_json_file(file_path):
     with open(file_path,'r',encoding='utf8') as f:
         json_str = f.read()
     return json.loads(json_str)
+
+
+
