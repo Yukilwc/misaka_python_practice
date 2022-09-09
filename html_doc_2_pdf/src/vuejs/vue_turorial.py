@@ -2,6 +2,7 @@ import logging
 import os
 from tools.use_selenium import ChromeUtils
 from selenium.webdriver.common.by import By
+from tools.file_tools import save_folder_file
 class VueTurorialDoc2Pdf(object):
     def __init__(self) -> None:
         print('init VueTurorialDoc2Pdf')
@@ -29,9 +30,10 @@ class VueTurorialDoc2Pdf(object):
         ChromeUtils.wait_selector(self.browser,check_selector)
         check_btn = self.browser.find_element(By.CSS_SELECTOR,check_selector)
         check_btn.click()
-        pass
     # 获取目录树json
     def menu_tree_2_json():
-        menu_tree_folder = './json/'
-        menu_tree_file = 'menu_tree_data.json'
+        menu_tree_folder = './json/menu/'
+        menu_tree_file = 'data.json'
+        content = dict(a=1)
+        save_folder_file(content,folder_path=menu_tree_folder,file_name=menu_tree_file)
         pass
