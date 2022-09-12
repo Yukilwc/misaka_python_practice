@@ -9,8 +9,9 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 
 class ChromeUtils():
-    def __init__(self,chrome_driver_path='C:\Program Files\Google\Chrome\Application\chromedriver.exe') -> None:
-        self.chrome_driver_path = chrome_driver_path
+# chrome_driver_path='C:\Program Files\Google\Chrome\Application\chromedriver.exe'
+    def __init__(self) -> None:
+        # self.chrome_driver_path = chrome_driver_path
         self.arg_list = [
             '--headless',
             '--disable-gpu',
@@ -28,7 +29,8 @@ class ChromeUtils():
         self.chrome_options.add_experimental_option('excludeSwitches', ['enable-automation'])
         self.chrome_options.add_experimental_option('useAutomationExtension', False)
     def get_browser(self):
-        browser = webdriver.Chrome(executable_path=self.chrome_driver_path,chrome_options=self.chrome_options)
+        # browser = webdriver.Chrome(executable_path=self.chrome_driver_path,chrome_options=self.chrome_options)
+        browser = webdriver.Chrome(chrome_options=self.chrome_options)
         browser.execute_cdp_cmd(
             'Page.addScriptToEvaluateOnNewDocument',
             {'source': 'Object.defineProperty(navigator, "webdriver", {get: () => undefined})'}

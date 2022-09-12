@@ -2,7 +2,7 @@ import logging
 import multiprocessing
 from operator import contains
 import os
-import time
+import time,threading
 from tools.list_tools import list_split
 from tools.use_selenium import ChromeUtils
 from selenium.webdriver.common.by import By
@@ -45,7 +45,7 @@ class VueTurorialDoc2Pdf(object):
         try:
             self.app_init(domain=self.menu_url)
             # self.menu_tree_2_json()
-            self.screen_all_page()
+            # self.screen_all_page()
         except Exception as e:
             logging.exception(e)
         finally:
@@ -120,22 +120,44 @@ class VueTurorialDoc2Pdf(object):
     def test_multi(self):
         print(' test_multi',self.screen_images_folder)
     # 截取保存全部图片
-    def screen_all_page(self):
+    def screen_all_page(self,list=[]):
+       # list分为5份
+        for node in list:
+            if node['url'] != '':
+                self.screen_page(node['url'],TreeNode.get_name(**node))
+                # time.sleep(1)
+        pass
+    # 按核心数获取分组
+    def get_multi_core_list(self):
         list = load_json_file(os.path.join(self.menu_tree_folder,self.menu_tree_file))
+        list = list[:10]
         length = len(list)
         thread_num = multiprocessing.cpu_count()
         group_len = length//thread_num
         if length%thread_num>0:
             group_len+=1
         split_list = list_split(list,group_len)
-        p = multiprocessing.Process(target=self.test_multi, args=('test',))
-        print('Child process will start.')
-        p.start()
-        p.join()
-        print('Child process end.')
-        # list分为5份
-        # for node in list:
-        #     if node['url'] != '':
-        #         self.screen_page(node['url'],TreeNode.get_name(**node))
-        #         # time.sleep(1)
-        pass
+        return split_list
+    def test_multi(self):
+        print('multi core',self.screen_images_folder)
+
+# 多线程爬取
+def multi_thread_generate():
+    instance = VueTurorialDoc2Pdf()
+    multi_list = instance.get_multi_core_list()
+    t = threading.Thread(target=instance.test_multi, name='LoopThread')
+    t.start()
+    t.join()
+    pass
+
+# 多进程爬取
+def multi_process_generate():
+    instance = VueTurorialDoc2Pdf()
+    p = multiprocessing.Process(target=instance.test_multi, args=('test',))
+    print('Child process will start.')
+    p.start()
+    p.join()
+    print('Child process end.')
+ 
+    pass
+
