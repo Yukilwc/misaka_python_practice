@@ -135,9 +135,9 @@ class VueTurorialDoc2Pdf(object):
     # 按核心数获取分组
     @staticmethod
     def get_multi_core_list(thread_num):
-        list = load_json_file(os.path.join(VueTurorialDoc2Pdf.menu_tree_folder,VueTurorialDoc2Pdf.menu_tree_file))
+        list = VueTurorialDoc2Pdf.get_all_list()
         # FIXME:
-        list = list[:3]
+        # list = list[46-1:46+1-1]
         length = len(list)
         if(thread_num is None):
             thread_num = multiprocessing.cpu_count()
@@ -156,6 +156,11 @@ class VueTurorialDoc2Pdf(object):
             final_item = final_item+others_list
             split_list.append(final_item)
         return split_list
+
+    @staticmethod
+    def get_all_list():
+        list = load_json_file(os.path.join(VueTurorialDoc2Pdf.menu_tree_folder,VueTurorialDoc2Pdf.menu_tree_file))
+        return list
 
     def test_multi(self,args):
         print('multi core',self.screen_images_folder,args)
@@ -182,6 +187,7 @@ def one_thread(list):
         instance.screen_all_page(list)
     except Exception as e:
         logging.exception(e)
+        logging.exception(list)
     finally:
         instance.quit()
 
@@ -199,4 +205,17 @@ def multi_process_generate():
     print('Child process end.')
  
     pass
-
+# 检查图片完备程度
+def check_images():
+    all_list =  VueTurorialDoc2Pdf.get_all_list()
+    image_list = filter(lambda item:item['url']!='',all_list)
+    not_exist_list = []
+    for node in image_list:
+        name = TreeNode.get_name(**node)
+        folder = VueTurorialDoc2Pdf.screen_images_folder
+        path = os.path.join(folder,name)
+        if(not os.path.exists(path)):
+            print('not exists path',path)
+            not_exist_list.append(node)
+    # print('not exists image',node)
+    pass

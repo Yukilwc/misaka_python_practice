@@ -4,6 +4,7 @@ __pycache__
 /node_modules
 /images
 /generate_pdf
+dist
 
 # Logs
 logs
