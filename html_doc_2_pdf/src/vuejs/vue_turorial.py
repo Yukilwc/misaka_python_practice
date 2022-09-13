@@ -3,6 +3,7 @@ import multiprocessing
 from operator import contains
 import os
 import time,threading
+from typing import final
 from tools.list_tools import list_split
 from tools.use_selenium import ChromeUtils
 from selenium.webdriver.common.by import By
@@ -33,24 +34,26 @@ class TreeNode(object):
     def get_name(**kw):
         return '%s_%s.png' % (kw['pid'],kw['id'])
 class VueTurorialDoc2Pdf(object):
+    menu_tree_folder =os.path.join( os.path.dirname(__file__),'dist','json')
+    screen_images_folder = os.path.join( os.path.dirname(__file__),'dist','images')
+    menu_url = 'https://cn.vuejs.org/guide/introduction.html'
+    menu_tree_file = 'data.json'
+    screen_selector = '#app'
     def __init__(self) -> None:
         print('init VueTurorialDoc2Pdf')
-        self.menu_tree_folder =os.path.join( os.path.dirname(__file__),'dist','json')
-        self.menu_tree_file = 'data.json'
-        self.screen_images_folder = os.path.join( os.path.dirname(__file__),'dist','images')
-        self.screen_selector = '#app'
-        self.menu_url = 'https://cn.vuejs.org/guide/introduction.html'
         self.chrome_utils = ChromeUtils()
         self.browser = self.chrome_utils.get_browser()
-        self.url_split_list = []
         try:
             self.app_init(domain=self.menu_url)
             # self.menu_tree_2_json()
             # self.screen_all_page()
         except Exception as e:
             logging.exception(e)
-        finally:
             self.browser.quit()
+        finally:
+            pass
+    def quit(self):
+        self.browser.quit()
     # 开始前设定内容 例如点击，设置cookie等
     def app_init(self,domain):
         self.browser.get(domain)
@@ -115,14 +118,14 @@ class VueTurorialDoc2Pdf(object):
         # 设置尺寸
         size = ChromeUtils.get_window_size(self.browser,self.screen_selector)
         self.browser.set_window_size(size['width'],size['height'])
-
+        print('on_before_screen finished')
         pass
     
     def test_multi(self):
         print(' test_multi',self.screen_images_folder)
     # 截取保存全部图片
-    def screen_all_page(self,index):
-        list = self.url_split_list[index]
+    def screen_all_page(self,list):
+        print(' screen_all_page:',list)
        # list分为5份
         for node in list:
             if node['url'] != '':
@@ -130,17 +133,28 @@ class VueTurorialDoc2Pdf(object):
                 # time.sleep(1)
         pass
     # 按核心数获取分组
-    def get_multi_core_list(self):
-        list = load_json_file(os.path.join(self.menu_tree_folder,self.menu_tree_file))
+    @staticmethod
+    def get_multi_core_list(thread_num):
+        list = load_json_file(os.path.join(VueTurorialDoc2Pdf.menu_tree_folder,VueTurorialDoc2Pdf.menu_tree_file))
         # FIXME:
-        list = list[:10]
+        list = list[:3]
         length = len(list)
-        thread_num = multiprocessing.cpu_count()
+        if(thread_num is None):
+            thread_num = multiprocessing.cpu_count()
         group_len = length//thread_num
-        if length%thread_num>0:
-            group_len+=1
-        split_list = list_split(list,group_len)
-        self.url_split_list  = split_list
+        others = length%thread_num
+        # if length%thread_num>0:
+            # group_len+=1
+        if len(list)<=thread_num:
+            split_list = list_split(list,1)
+        else:
+            split_list = list_split(list[0:length-others],group_len)
+            others_list = list[length-2:length]
+            final_item = split_list.pop()
+            if final_item==None:
+                final_item = []
+            final_item = final_item+others_list
+            split_list.append(final_item)
         return split_list
 
     def test_multi(self,args):
@@ -149,11 +163,11 @@ class VueTurorialDoc2Pdf(object):
 # 多线程爬取
 def multi_thread_generate():
     start_time = time.time()
-    instance = VueTurorialDoc2Pdf()
-    multi_list = instance.get_multi_core_list()
+    multi_list =  VueTurorialDoc2Pdf.get_multi_core_list(8)
+    # print('multi_list  len',len(multi_list ))
     t_list = []
     for index,value in enumerate(multi_list):
-        t = threading.Thread(target=instance.screen_all_page, args=(index,))
+        t = threading.Thread(target=one_thread, args=(multi_list[index],))
         t_list.append(t)
         t.start()
 
@@ -161,6 +175,16 @@ def multi_thread_generate():
         t.join()
     print('线程结束，耗时:',time.time()-start_time)
     pass
+
+def one_thread(list):
+    try:
+        instance = VueTurorialDoc2Pdf()
+        instance.screen_all_page(list)
+    except Exception as e:
+        logging.exception(e)
+    finally:
+        instance.quit()
+
 
 def multi_thread_generate_with_pool():
     pass
