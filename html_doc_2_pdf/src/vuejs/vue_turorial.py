@@ -42,6 +42,7 @@ class VueTurorialDoc2Pdf(object):
         self.menu_url = 'https://cn.vuejs.org/guide/introduction.html'
         self.chrome_utils = ChromeUtils()
         self.browser = self.chrome_utils.get_browser()
+        self.url_split_list = []
         try:
             self.app_init(domain=self.menu_url)
             # self.menu_tree_2_json()
@@ -120,7 +121,8 @@ class VueTurorialDoc2Pdf(object):
     def test_multi(self):
         print(' test_multi',self.screen_images_folder)
     # 截取保存全部图片
-    def screen_all_page(self,list=[]):
+    def screen_all_page(self,index):
+        list = self.url_split_list[index]
        # list分为5份
         for node in list:
             if node['url'] != '':
@@ -130,6 +132,7 @@ class VueTurorialDoc2Pdf(object):
     # 按核心数获取分组
     def get_multi_core_list(self):
         list = load_json_file(os.path.join(self.menu_tree_folder,self.menu_tree_file))
+        # FIXME:
         list = list[:10]
         length = len(list)
         thread_num = multiprocessing.cpu_count()
@@ -137,17 +140,29 @@ class VueTurorialDoc2Pdf(object):
         if length%thread_num>0:
             group_len+=1
         split_list = list_split(list,group_len)
+        self.url_split_list  = split_list
         return split_list
-    def test_multi(self):
-        print('multi core',self.screen_images_folder)
+
+    def test_multi(self,args):
+        print('multi core',self.screen_images_folder,args)
 
 # 多线程爬取
 def multi_thread_generate():
+    start_time = time.time()
     instance = VueTurorialDoc2Pdf()
     multi_list = instance.get_multi_core_list()
-    t = threading.Thread(target=instance.test_multi, name='LoopThread')
-    t.start()
-    t.join()
+    t_list = []
+    for index,value in enumerate(multi_list):
+        t = threading.Thread(target=instance.screen_all_page, args=(index,))
+        t_list.append(t)
+        t.start()
+
+    for t in t_list:
+        t.join()
+    print('线程结束，耗时:',time.time()-start_time)
+    pass
+
+def multi_thread_generate_with_pool():
     pass
 
 # 多进程爬取
