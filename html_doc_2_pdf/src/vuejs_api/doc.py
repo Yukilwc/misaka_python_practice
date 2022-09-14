@@ -12,6 +12,25 @@ from selenium.webdriver.common.by import By
 from tools.file_tools import load_json_file, save_json_file
 
 
+
+def start():
+    type = input('输入要进行的操作(menu,image,check,pdf):')
+    if type=='menu':
+        Doc2Pdf().menu_tree_2_json().quit()
+    elif type=='image':
+        # 截取图片
+        Doc2Pdf.multi_thread_generate_with_pool()
+        pass
+    elif type=='check':
+        MenuTree().check_images()
+        pass
+    elif type=='pdf':
+        Doc2Pdf.image_list_2_pdf_by_pillow()
+        pass
+    else:
+        logging.exception('未知的类型')
+
+
 class TreeNode(object):
     def __init__(self) -> None:
         self.id = ''
@@ -193,7 +212,7 @@ class Doc2Pdf(object):
 
     @staticmethod
     def image_list_2_pdf_by_pillow():
-        list = Doc2Pdf.get_all_image_local_path_list()
+        list = MenuTree().get_all_image_local_path_list()
         if not os.path.exists(Doc2Pdf.pdf_folder):
             os.makedirs(Doc2Pdf.pdf_folder)
         # 构造首个image和剩余image list 
