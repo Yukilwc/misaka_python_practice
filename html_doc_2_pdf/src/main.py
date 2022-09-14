@@ -8,6 +8,7 @@ elif type=='image':
     doc.Doc2Pdf.multi_thread_generate_with_pool()
     pass
 elif type=='check':
+    doc.MenuTree().check_images()
     pass
 elif type=='pdf':
     pass

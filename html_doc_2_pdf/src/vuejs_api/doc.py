@@ -48,8 +48,11 @@ class MenuTree(object):
             self.menu_list = load_json_file(os.path.join(MenuTree.menu_tree_folder,MenuTree.menu_tree_file))
         pass
     # 按核心数获取分组
-    def get_multi_core_list(self,thread_num):
-        list = self.menu_list
+    def get_multi_core_list(self,thread_num,*,start=None,end=None):
+        if start is None:
+            list = self.menu_list
+        else:
+            list = self.menu_list[start:end]
         length = len(list)
         if(thread_num is None):
             thread_num = multiprocessing.cpu_count()
@@ -76,14 +79,15 @@ class MenuTree(object):
     # 检查图片完备程度
     def check_images(self):
         all_list =  self.menu_list
-        image_list = filter(lambda item:item['url']!='',all_list)
+        # image_list = filter(lambda item:item['url']!='',all_list)
         not_exist_list = []
-        for node in image_list:
+        for index,node in enumerate(all_list):
             name = TreeNode.get_name(**node)
             folder = Doc2Pdf.screen_images_folder
             path = os.path.join(folder,name)
-            if(not os.path.exists(path)):
+            if(node['url']!='' and not os.path.exists(path)):
                 print('not exists path',path)
+                print('not exists index',index)
                 not_exist_list.append(node)
         # print('not exists image',node)
         pass
@@ -204,7 +208,8 @@ class Doc2Pdf(object):
         """
         tree = MenuTree()
         thread_num = 8
-        split_list = tree.get_multi_core_list(thread_num)
+        # split_list = tree.get_multi_core_list(thread_num)
+        split_list = tree.get_multi_core_list(thread_num,start=56,end=58)
         def one_thread(list):
             print('one_thread',len(list))
             try:
