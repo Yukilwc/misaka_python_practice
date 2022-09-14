@@ -14,9 +14,11 @@ from tools.file_tools import load_json_file, save_json_file
 
 
 def start():
-    type = input('输入要进行的操作(menu,image,check,pdf):')
+    type = input('输入要进行的操作(menu,single,image,check,pdf):')
     if type=='menu':
         Doc2Pdf().menu_tree_2_json().quit()
+    if type=='single':
+        MenuTree.input_single_menu_node()
     elif type=='image':
         # 截取图片
         Doc2Pdf.multi_thread_generate_with_pool()
@@ -111,6 +113,14 @@ class MenuTree(object):
         # print('not exists image',node)
         pass
 
+    def input_single_menu_node():
+        id = input('id:')
+        pid = input('pid:')
+        title = input('title:')
+        url = input('url:')
+        content = [{'id':id,'pid':pid,'title':title,'url':url}]
+        save_json_file(content,folder_path=MenuTree.menu_tree_folder,file_name=MenuTree.menu_tree_file)
+
 
 
 
@@ -118,8 +128,8 @@ class Doc2Pdf(object):
     screen_images_folder = os.path.join( os.path.dirname(__file__),'dist','images')
     pdf_folder= os.path.join( os.path.dirname(__file__),'dist','pdf')
     pdf_name = 'book.pdf'
-    menu_url = 'https://cn.vuejs.org/guide/introduction.html'
-    screen_selector = '#app'
+    menu_url = ''
+    screen_selector = 'body'
 
     def __init__(self) -> None:
         print('init Doc2Pdf')
@@ -186,14 +196,14 @@ class Doc2Pdf(object):
         window_height= 1080
         self.browser.set_window_size(window_with,window_height)
         # 去除多余元素
-        ChromeUtils.remove_el(self.browser,'.banner')
-        ChromeUtils.remove_el(self.browser,'.nav-bar')
-        ChromeUtils.remove_el(self.browser,'.aside-container >div:not(.VPContentDocOutline)')
-        ChromeUtils.remove_el(self.browser,'.vuejobs-wrapper')
+        # ChromeUtils.remove_el(self.browser,'.banner')
+        # ChromeUtils.remove_el(self.browser,'.nav-bar')
+        # ChromeUtils.remove_el(self.browser,'.aside-container >div:not(.VPContentDocOutline)')
+        # ChromeUtils.remove_el(self.browser,'.vuejobs-wrapper')
         # 修正样式
-        ChromeUtils.add_style(self.browser,'.VPSidebar',style_name="top",style_value='0px')
-        ChromeUtils.add_style(self.browser,'.VPApp',style_name="paddingTop",style_value='0px')
-        ChromeUtils.add_style(self.browser,'.VPContent',style_name="paddingTop",style_value='0px')
+        # ChromeUtils.add_style(self.browser,'.VPSidebar',style_name="top",style_value='0px')
+        # ChromeUtils.add_style(self.browser,'.VPApp',style_name="paddingTop",style_value='0px')
+        # ChromeUtils.add_style(self.browser,'.VPContent',style_name="paddingTop",style_value='0px')
         # 设置尺寸
         size = ChromeUtils.get_window_size(self.browser,self.screen_selector)
         self.browser.set_window_size(size['width'],size['height'])

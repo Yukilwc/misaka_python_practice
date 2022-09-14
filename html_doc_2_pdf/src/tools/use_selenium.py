@@ -19,6 +19,7 @@ class ChromeUtils():
             '--ignore-certificate-errors'
             ,'--disable-blink-features=AutomationControlled'
         ]
+        # self.arg_list.append('--proxy-server=http://localhost:10080')
         self.chrome_options = Options()
         self.set_options()
 

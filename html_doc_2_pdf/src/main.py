@@ -1,3 +1,3 @@
 import logging
-from vuejs_api import doc
+from single_page import doc
 doc.start()
