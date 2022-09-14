@@ -1,5 +1,6 @@
 import logging
 import multiprocessing
+from PIL import Image
 from operator import contains
 import os
 import time,threading
@@ -36,6 +37,8 @@ class TreeNode(object):
 class VueTurorialDoc2Pdf(object):
     menu_tree_folder =os.path.join( os.path.dirname(__file__),'dist','json')
     screen_images_folder = os.path.join( os.path.dirname(__file__),'dist','images')
+    pdf_folder= os.path.join( os.path.dirname(__file__),'dist','pdf')
+    pdf_name = 'book.pdf'
     menu_url = 'https://cn.vuejs.org/guide/introduction.html'
     menu_tree_file = 'data.json'
     screen_selector = '#app'
@@ -162,8 +165,27 @@ class VueTurorialDoc2Pdf(object):
         list = load_json_file(os.path.join(VueTurorialDoc2Pdf.menu_tree_folder,VueTurorialDoc2Pdf.menu_tree_file))
         return list
 
+    @staticmethod
+    def get_all_image_local_path_list():
+        all_list =  VueTurorialDoc2Pdf.get_all_list()
+        image_list = filter(lambda item:item['url']!='',all_list)
+        path_list = [ os.path.join(VueTurorialDoc2Pdf.screen_images_folder,TreeNode.get_name(**node)) for node in image_list]
+        return path_list
+
+
     def test_multi(self,args):
         print('multi core',self.screen_images_folder,args)
+
+    @staticmethod
+    def image_list_2_pdf_by_pillow():
+        list = VueTurorialDoc2Pdf.get_all_image_local_path_list()
+        if not os.path.exists(VueTurorialDoc2Pdf.pdf_folder):
+            os.makedirs(VueTurorialDoc2Pdf.pdf_folder)
+        # 构造首个image和剩余image list 
+        img_1= Image.open(list[0]).convert('RGB')
+        img_others_list = [Image.open(path ).convert('RGB') for path in list[1:]]
+        img_1.save(os.path.join(VueTurorialDoc2Pdf.pdf_folder,VueTurorialDoc2Pdf.pdf_name),save_all=True,append_images=img_others_list)
+
 
 # 多线程爬取
 def multi_thread_generate():
