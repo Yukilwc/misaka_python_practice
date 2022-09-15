@@ -5,6 +5,8 @@ __pycache__
 /images
 /generate_pdf
 dist
+/Lib
+/Scripts
 
 # Logs
 logs
