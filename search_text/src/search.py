@@ -22,6 +22,8 @@ def search(filter_list):
     # 遍历全部文件 构造node数组
     all_node_list = []
     loop_all_files(root_path,all_node_list)
+    content = [node.__dict__ for node in all_node_list]
+    save_json_file(content,folder_path= os.path.dirname(os.path.realpath(__file__)),file_name='res.json')
     pass
 
 def is_black(name):
