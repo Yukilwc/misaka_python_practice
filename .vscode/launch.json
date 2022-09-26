@@ -10,8 +10,8 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "justMyCode": true,
-            "stopOnEntry": false
+            "justMyCode": false,
+            "stopOnEntry": true 
         }
     ]
 }
