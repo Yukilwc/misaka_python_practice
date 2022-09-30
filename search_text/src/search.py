@@ -39,10 +39,14 @@ def search(filter_list):
                 if index==0:
                     node.span_list = [(0,len(file_content))]
                 filter_func(node,file_content)
-    content = [{"relative_path":node.relative_path,"path":node.path,"line_list":node.line_list} for node in all_node_list if len(node.span_list)>0]
+    content = [{"relative_path":node.relative_path,'path':node.path,"line_list":node.line_list} for node in all_node_list if len(node.span_list)>0]
     print('search result length:',len(content))
     save_json_file(content,folder_path= os.path.dirname(os.path.realpath(__file__)),file_name='res.json')
-    pass
+    # is_open = input('是否打开全部查询结果%s个文件,1是2否?'%len(content))
+    # if(int(is_open)==1):
+    #     for node in content:
+    #         open_path = node['path']
+    #         os.system('code %s'%open_path)
 
 def is_black(name):
     res = False
@@ -101,9 +105,12 @@ reg_list = [
     r'(</i>|<img)' # 匹配包含图标
 ]
 
+
 filter_list = [filter_factory(f) for f in reg_list]
 
 res_list = search(filter_list)
 
 # black_res = is_black('node_modules/vue')
 # print('black_res ',black_res )
+
+# os.system(r'code D:\\workspace\\work\\web\\gitee\\etranscode\\etransNew\\src\\App.vue')
