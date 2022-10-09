@@ -5,9 +5,16 @@ produce a single resultant array.
 """
 
 # 返回iterator
-def flatten_iter(list):
-    for i in list:
-        
+from collections.abc import Iterable
 
-res = flatten_iter([[1,2,3],[[8,9,[10]],[6,7,[]],3],[1,2,[4,5]]])
-print(' flatten_iter',res)
+
+def flatten_iter(iterable):
+    for element in iterable:
+        if not isinstance(element,str) and isinstance(element,Iterable):
+            yield from flatten_iter(element)
+        else:
+            yield element
+
+res = flatten_iter([[1,2,3],[[8,9,[10]],[6,7,[]],3],8,[1,2,[4,5]]])
+for i in res:
+    print('i',i)
